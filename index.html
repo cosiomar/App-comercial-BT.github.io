@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Ventas</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #1d4ed8;
+      --background-color: #f8fafc;
+      --card-color: #ffffff;
+      --text-color: #1e293b;
+      --hover-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header y Navegación */
+    .header {
+      background: var(--card-color);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Login */
+    .login-container {
+      background: var(--card-color);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      margin: 2rem auto;
+      transition: var(--transition);
+    }
+
+    .login-container.hidden {
+      display: none;
+    }
+
+    .login-title {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Botones */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
+      gap: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--hover-color);
+      transform: translateY(-2px);
+    }
+
+    .button i {
+      font-size: 1.2rem;
+    }
+
+    /* Grid de Funciones */
+    .functions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .functions-grid.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .function-card {
+      background: var(--card-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .function-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+
+    .function-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+
+    .function-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .function-description {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    /* Directorio Telefónico */
+    #phoneDirectory {
+      background: var(--card-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-top: 1.5rem;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    #phoneDirectory.visible {
+      display: block;
+    }
+
+    .directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .contact-card {
+      padding: 1rem;
+      background: var(--background-color);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Mensajes de error */
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .nav-buttons {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .function-card {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header con navegación -->
+  <header class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-building"></i> Portal Comercial BT
+      </div>
+      <div class="nav-buttons" id="topButtons" style="display: none;">
+  <button class="button" onclick="window.open('https://grpleg.sharepoint.com/sites/countries/mexico/Lists/Directorio%20Telefnico/Por%20Departamento.aspx', '_blank')">
+    <i class="fas fa-phone"></i> Directorio
+</button>
+  <a href="https://teams.microsoft.com" class="button" target="_blank">
+    <i class="fas fa-video"></i> Teams
+  </button>
+  <button class="button" onclick="window.open('https://grpleg.sharepoint.com/sites/Shares-MX-Mexico/Marketing/Contenidos%20Digitales/Forms/AllItems.aspx?viewid=3b4d78c6%2Dd259%2D48b0%2D80af%2Dfd87cefebd51', '_blank')">
+    <i class="fas fa-file-pdf"></i> Material Digital MKT
+  
+  </a>
+  <button class="button" onclick="logout()">
+    <i class="fas fa-sign-out-alt"></i> Salir
+  </button>
+</div>
+    </div>
+  </header>
+
+  <!-- Login -->
+  <div class="container">
+    <div class="login-container" id="loginContainer">
+      <h2 class="login-title">Bienvenido al Portal Comercial BT</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Correo electrónico" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Contraseña" required>
+        </div>
+        <button type="submit" class="button" style="width: 100%;">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </button>
+        <p class="error-message" id="errorMessage">Credenciales incorrectas</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Directorio Telefónico -->
+  <div class="container">
+    <div id="phoneDirectory">
+      <h3>Directorio Telefónico</h3>
+      <div class="directory-grid">
+        <div class="contact-card">
+          <div class="contact-avatar">JP</div>
+          <div>
+            <strong>Juan Pérez</strong>
+            <div>Ext: 1234</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">MG</div>
+          <div>
+            <strong>María García</strong>
+            <div>Ext: 5678</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid de Funciones -->
+  <div class="container">
+    <div class="functions-grid" id="functionsGrid">
+      <a href="https://app.powerbi.com/groups/efd6a46f-abab-4ebd-8a74-5457347988e3/reports/e9690970-9591-49e4-993a-06cfbcc88721/ReportSection?experience=power-bi" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-chart-line function-icon"></i>
+        <h3 class="function-title">Avance de Ventas</h3>
+        <p class="function-description">Visualiza el progreso de ventas  con Power BI</p>
+      </a>
+
+      <a href="https://app.powerbi.com/groups/efd6a46f-abab-4ebd-8a74-5457347988e3/reports/48c91735-e5ab-45a9-8e94-6bc0b7721b52/ReportSection?experience=power-bi" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-boxes function-icon"></i>
+        <h3 class="function-title">Existencias</h3>
+        <p class="function-description">Consulta el inventario actualizado en Power BI</p>
+      </a>
+
+      <a href="https://login.salesforce.com/" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-file-invoice-dollar function-icon"></i>
+        <h3 class="function-title">Cotizaciones</h3>
+        <p class="function-description">Gestiona cotizaciones en Salesforce</p>
+      </a>
+
+      <a href="https://btselecto.bticino.com.mx/wp-login.php?redirect_to=https%3A%2F%2Fbtselecto.bticino.com.mx%2F&reauth=1" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-tags function-icon"></i>
+        <h3 class="function-title">Promociones</h3>
+        <p class="function-description">Consulta las promociones vigentes</p>
+      </a>
+
+      <a href="https://engage.cloud.microsoft/main/groups/eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIxODc4ODAwOTU3NDQifQ/all" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-users function-icon"></i>
+        <h3 class="function-title">Comunidad Comercial</h3>
+        <p class="function-description">Conecta con la comunidad en Microsoft Engage</p>
+      </a>
+
+      <a href="https://five.epicollect.net/" 
+         class="function-card" 
+         target="_blank">
+        <i class="fas fa-mobile-alt function-icon"></i>
+        <h3 class="function-title">Epic Collect 5</h3>
+        <p class="function-description">Accede a la plataforma de recolección de datos</p>
+      </a>
+
+  <a href="https://bticino.com.mx/biblioteca?doctype=catalog" class="function-card" target="_blank">
+  <i class="fas fa-book function-icon"></i>
+  <h3 class="function-title">Catálogos</h3>
+  <p class="function-description">Accede a nuestro catálogo de productos</p>
+</a>
+<a href="https://to-do.microsoft.com/tasks/" class="function-card" target="_blank">
+  <i class="fas fa-tasks function-icon"></i>
+  <h3 class="function-title">Mis Tareas</h3>
+  <p class="function-description">Gestiona tus tareas con Microsoft To Do</p>
+</a>
+
+<a href="https://copilot.cloud.microsoft/?auth=2" class="function-card" target="_blank">
+  <i class="fas fa-question-circle function-icon"></i>
+  <h3 class="function-title">Preguntas Frecuentes</h3>
+  <p class="function-description">Consulta las dudas más comunes y apoyate de la IA</p>
+</a>
+
+    </div>
+  </div>
+
+  <script>
+    // Usuarios autorizados
+    const authorizedUsers = [
+      { email: 'usuario@ejemplo.com', password: '123456' }
+    ];
+
+    // Referencias a elementos del DOM
+    const loginContainer = document.getElementById('loginContainer');
+    const loginForm = document.getElementById('loginForm');
+    const topButtons = document.getElementById('topButtons');
+    const functionsGrid = document.getElementById('functionsGrid');
+    const errorMessage = document.getElementById('errorMessage');
+    const phoneDirectory = document.getElementById('phoneDirectory');
+
+    // Manejo del formulario de login
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      const user = authorizedUsers.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        loginContainer.style.display = 'none';
+        topButtons.style.display = 'flex';
+        functionsGrid.style.display = 'grid';
+        functionsGrid.classList.add('visible');
+        sessionStorage.setItem('isLoggedIn', 'true');
+      } else {
+        errorMessage.style.display = 'block';
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+        }, 3000);
+      }
+    });
+
+    // Función para mostrar/ocultar el directorio telefónico
+    function showPhoneDirectory() {
+      phoneDirectory.classList.toggle('visible');
+    }
+
+    // Función para cerrar sesión
+    function logout() {
+      loginContainer.style.display = 'block';
+      topButtons.style.display = 'none';
+      functionsGrid.classList.remove('visible');
+      phoneDirectory.classList.remove('visible');
+      loginForm.reset();
+      errorMessage.style.display = 'none';
+      sessionStorage.removeItem('isLoggedIn');
+    }
+
+    // Verificar sesión al cargar la página
+    window.addEventListener('load', function() {
+      if (sessionStorage.getItem('isLoggedIn') === 'true') {
+        loginContainer.style.display = 'none';
+        topButtons.style.display = 'flex';
+        functionsGrid.style.display = 'grid';
+        functionsGrid.classList.add('visible');
+      }
+    });
+  </script>
+</body>
+</html>
